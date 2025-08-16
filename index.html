@@ -7,7 +7,7 @@
 <meta name="description" content="ประเมินความเครียดของคุณตอนนี้ด้วย SPST-20 พร้อมคำแนะนำคลายเครียด และแบบประเมินความพึงพอใจ" />
 <style>
 :root{
---bg:#e3f0fc; /* ฟ้าอ่อน */
+--bg:#e3f0fc;
 --card:#ffffff;
 --ink:#111827;
 --muted:#6b7280;
@@ -64,7 +64,6 @@ footer{margin-top:24px;font-size:12px}
 <div class="wrap">
 <header aria-label="หัวเว็บ">
 <div class="logo-img">
-<!-- ใส่รูปโลโก้ (image 2) -->
 <img src="stress-logo.png" alt="โลโก้สุขภาพจิต" />
 </div>
 <div>
@@ -220,7 +219,7 @@ footer{margin-top:24px;font-size:12px}
 </div>
 
 <footer class="muted">
-อ้างอิง: เกณฑ์แปลผลและข้อคำถาม SPST-20 จากเอกสารของกรมสุขภาพจิต/โรงพยาบาลสวนปรุง; ช่องทางช่วยเหลือ 1323 และหน่วยงานที่เกี่ยวข้อง; หลักฐานเชิงวิจัยเรื่องการฝึกหายใจเพื่อลดความเครียด (มีผลต่อระบบประสาทพาราซิมพาเทติก) และแนวทางพัฒนาแบบลิเคิร์ต 5 ระดับ (Likert). แหล่งที่มาแนบท้ายหน้านี้
+อ้างอิง: เกณฑ์แปลผลและข้อคำถาม SPST-20 จากเอกสารของกรมสุขภาพจิต/โรงพยาบาลสวนปรุง; ช่องทางช่วยเหลือ 1323 และหน่วยงานที่เกี่ยวข้อง; หลักฐานเชิงวิจัยเรื่องการฝึกหายใจเพื่อลดความเครียด (มีผลต่อระบบประสาทพาราซิมพาเทต) และแนวทางพัฒนาแบบลิเคิร์ต 5 ระดับ (Likert). แหล่งที่มาแนบท้ายหน้านี้
 </footer>
 </div>
 
@@ -243,7 +242,7 @@ const bar = document.getElementById('bar');
 function setStep(n){
 state.step = n;
 document.querySelectorAll('.stage').forEach(el=>{
-el.classList.toggle('hide', +el.dataset.step !== n);
+  el.classList.toggle('hide', +el.dataset.step !== n);
 });
 bar.style.width = ((n-1)/(stepsTotal-1))*100 + '%';
 window.scrollTo({top:0, behavior:'smooth'});
@@ -253,9 +252,9 @@ document.getElementById('startBtn').addEventListener('click',()=>setStep(2));
 
 document.querySelectorAll('[data-nav]').forEach(btn=>{
 btn.addEventListener('click', e=>{
-const dir = e.currentTarget.dataset.nav;
-if(dir==='back') setStep(Math.max(1, state.step-1));
-if(dir==='next') setStep(Math.min(stepsTotal, state.step+1));
+  const dir = e.currentTarget.dataset.nav;
+  if(dir==='back') setStep(Math.max(1, state.step-1));
+  if(dir==='next') setStep(Math.min(stepsTotal, state.step+1));
 });
 });
 
@@ -286,252 +285,4 @@ ${[1,2,3,4,5].map(v=>`
 `;
 questionsDiv.appendChild(q);
 q.addEventListener('change', e=>{
-if(e.target.name === `q${idx}`){
-state.answers[idx] = +e.target.value;
-}
-});
-});
-
-// Calculate & interpret
-const scoreBox = document.getElementById('scoreBox');
-document.getElementById('calcBtn').addEventListener('click', ()=>{
-if (Object.keys(state.answers).length < 20) {
-scoreBox.classList.remove('hide');
-scoreBox.innerHTML = `
-<div class="tag-bad"><strong>กรุณาตอบให้ครบทั้ง 20 ข้อก่อน</strong><br>ระบบจะไม่ประเมินผลจนกว่าจะตอบครบทุกข้อ</div>
-`;
-return;
-}
-
-let sum = 0;
-Object.values(state.answers).forEach(v=>sum += v);
-state.score = sum;
-
-let interp = "";
-let tag = "";
-if (sum <= 23){ interp="ระดับน้อย (เป็นประโยชน์ต่อแรงจูงใจและปรับตัวได้)"; tag="ok"; }
-else if (sum <= 41){ interp="ระดับปานกลาง (อยู่ในเกณฑ์ปกติ ผ่อนคลายด้วยกิจกรรมบวก)"; tag="warn"; }
-else if (sum <= 61){ interp="ระดับสูง (กระทบชีวิตประจำวัน ควรคลายเครียดและหาทางแก้ไข/ขอปรึกษา)"; tag="bad"; }
-else { interp="ระดับรุนแรง (ส่งผลทั้งกายและใจ ควรได้รับการช่วยเหลือจากผู้เชี่ยวชาญอย่างรวดเร็ว)"; tag="bad"; }
-state.interp = interp;
-
-scoreBox.classList.remove('hide');
-scoreBox.innerHTML = `
-<div><strong>คะแนนรวม:</strong> ${sum} คะแนน</div>
-<div>การแปลผล: <strong class="tag-${tag}">${interp}</strong></div>
-<div class="btns" style="margin-top:10px">
-<button class="primary" onclick="setStep(4)">ถัดไป</button>
-</div>
-`;
-});
-
-// ---------- Step 4: choose method ----------
-let selected = null;
-document.querySelectorAll('.chip').forEach(ch=>{
-ch.addEventListener('click', ()=>{
-selected = ch.dataset.choice;
-state.choice = selected;
-document.getElementById('goChoice').disabled = false;
-document.getElementById('crisisInfo').classList.toggle('hide', selected!=='crisis');
-});
-});
-document.getElementById('goChoice').addEventListener('click', ()=> setStep(5));
-
-// ---------- Step 5: render chosen method ----------
-const methodPane = document.getElementById('methodPane');
-function renderMethod(){
-const c = state.choice;
-if(!c){ methodPane.innerHTML = "<p class='muted'>ยังไม่ได้เลือกวิธี</p>"; return; }
-
-// หมายเหตุสีเขียว หากไม่ใช่เครียดรุนแรง
-if (c !== 'crisis') {
-methodPane.innerHTML += `
-<div class="result" style="color:var(--ok);background:#f0fff0;border:1px solid #bef5c2;margin-bottom:12px;">
-คุณสามารถกดย้อนกลับเพื่อเลือกทำกิจกรรมอื่น ๆ ได้อีก
-</div>
-`;
-}
-
-if(c==='music'){
-methodPane.innerHTML += `
-<h3>ฟังเพลงผ่อนคลาย (ตัวอย่าง)</h3>
-<p class="muted">ใส่ลิงก์เพลย์ลิสต์ที่คุณชอบ (เช่น YouTube/Spotify) ในไฟล์นี้ภายหลังได้</p>
-<audio controls style="width:100%">
-<source src="" type="audio/mp3" />
-เบราว์เซอร์ของคุณไม่รองรับตัวเล่นเสียง
-</audio>
-<div class="result" style="margin-top:12px">
-เคล็ดลับ: เลือกเพลงจังหวะช้า-กลาง, ไม่มีเนื้อร้องเยอะ เพื่อช่วยให้หัวใจและลมหายใจช้าลง
-</div>
-`;
-}
-
-if(c==='breath'){
-methodPane.innerHTML += `
-<h3>ฝึกหายใจแบบ 4-4-6 (แนะนำสำหรับลดความตึงเครียด)</h3>
-<div class="circle-breathe" id="breathCircle"><div class="label-center" id="breathLabel">พร้อม…</div></div>
-<div class="label-center">รอบละ ~14 วินาที • ลองอย่างน้อย 6–10 รอบ</div>
-<div class="result" style="margin-top:12px">
-หลักฐานวิจัยชี้ว่าการฝึกหายใจช่วยเพิ่มการทำงานของระบบพาราซิมพาเทติก ลดความเครียดและความกังวลได้.
-</div>
-<div class="btns" style="justify-content:center">
-<button class="ghost" id="breathStart">เริ่มฝึก</button>
-<button class="subtle" id="breathStop">หยุด</button>
-</div>
-`;
-setupBreathing();
-}
-
-if(c==='game'){
-methodPane.innerHTML += `
-<h3>เกมจิ๋วโฟกัสสายตา</h3>
-<p class="muted">คลิกที่วงกลมเท่าที่หาได้ใน 20 วินาที</p>
-<div id="gameArea" style="position:relative;height:260px;border:1px solid #e5e7eb;border-radius:12px;margin-top:8px;background:#fff"></div>
-<div class="btns"><button class="ghost" id="gameStart">เริ่มเกม</button><span id="gameInfo" class="muted"></span></div>
-`;
-setupGame();
-}
-
-if(c==='video'){
-methodPane.innerHTML += `
-<h3>วิดีโอผ่อนคลาย</h3>
-<p class="muted">ฝังวิดีโอที่คุณเลือก (เช่น YouTube ลิขสิทธิ์ถูกต้อง) โดยแทนที่ src ของ iframe ด้านล่าง</p>
-<div style="position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb">
-<iframe title="relax-video" src="" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
-</div>
-`;
-}
-
-if(c==='crisis'){
-methodPane.innerHTML = `
-<h3>คำแนะนำสำหรับภาวะเครียดรุนแรง</h3>
-<div class="result" style="margin-bottom:0;">
-หากคุณหรือคนใกล้ตัวมีภาวะเครียดรุนแรง หรือมีความเสี่ยง กรุณาติดต่อขอความช่วยเหลือจากสายด่วนสุขภาพจิต <strong>1323</strong>
-หรือ สายด่วน <strong>1669</strong> (การแพทย์ฉุกเฉิน) และช่องทางออนไลน์ <strong>LINE</strong> หรือ <strong>Facebook Fanpage 1323</strong>
-</div>
-`;
-}
-}
-function setupBreathing(){
-const circle = document.getElementById('breathCircle');
-const label = document.getElementById('breathLabel');
-let timer=null, phase=0;
-const seq = [
-{text:"หายใจเข้า… 4 วินาที", scale:1.15, dur:4000},
-{text:"กลั้นไว้… 4 วินาที", scale:1.15, dur:4000},
-{text:"ผ่อนลมหายใจออก… 6 วินาที", scale:1.0, dur:6000}
-];
-const tick = ()=>{
-const p = seq[phase%seq.length];
-circle.style.transform = `scale(${p.scale})`;
-label.textContent = p.text;
-timer = setTimeout(()=>{ phase++; tick(); }, p.dur);
-};
-document.getElementById('breathStart').onclick = ()=>{ if(timer) clearTimeout(timer); phase=0; tick(); };
-document.getElementById('breathStop').onclick = ()=>{ if(timer) clearTimeout(timer); label.textContent = "พักหายใจตามสบาย"; circle.style.transform='scale(1)'; };
-}
-function setupGame(){
-const area = document.getElementById('gameArea');
-const info = document.getElementById('gameInfo');
-let score=0, time=20, running=false, tInt=null, sInt=null;
-
-function spawn(){
-if(!running) return;
-const dot = document.createElement('div');
-const s = 24;
-const x = Math.random()*(area.clientWidth - s);
-const y = Math.random()*(area.clientHeight - s);
-dot.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${s}px;height:${s}px;border-radius:999px;background:#2563eb;`;
-dot.addEventListener('click', ()=>{ score++; dot.remove(); });
-area.appendChild(dot);
-setTimeout(()=>dot.remove(), 1400);
-}
-function stop(){
-running=false; clearInterval(tInt); clearInterval(sInt);
-info.textContent = `จบเกม • ได้ ${score} วง`;
-}
-document.getElementById('gameStart').onclick = ()=>{
-score=0; time=20; area.innerHTML=''; running=true;
-info.textContent = `เวลา ${time}s | คะแนน 0`;
-tInt = setInterval(()=>{ time--; info.textContent = `เวลา ${time}s | คะแนน ${score}`; if(time<=0) stop(); },1000);
-sInt = setInterval(spawn,450);
-};
-}
-
-// Hook when entering step 5
-const observer = new MutationObserver(()=>{
-if (!document.querySelector('[data-step="5"]').classList.contains('hide')) {
-renderMethod();
-}
-});
-observer.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
-
-// ---------- Step 6: Satisfaction questions (10) ----------
-const satItems = [
-"เข้าใจขั้นตอนการทำแบบประเมินได้ง่าย",
-"การอธิบายเกณฑ์คะแนนชัดเจน",
-"ความสะดวกในการเลือกคำตอบบนมือถือ",
-"คำแนะนำคลายเครียดมีประโยชน์",
-"ส่วนฝึกหายใจใช้งานง่ายและช่วยได้",
-"เนื้อหามีความน่าเชื่อถือ",
-"รูปแบบ/สีสบายตา",
-"ระยะเวลาที่ใช้เหมาะสม",
-"โดยรวมช่วยให้ตระหนักรู้ภาวะความเครียดของตน",
-"จะแนะนำเครื่องมือนี้ให้ผู้อื่น"
-];
-const satDiv = document.getElementById('satQs');
-satItems.forEach((t,i)=>{
-const idx = i+1;
-const q = document.createElement('div'); q.className='q';
-q.innerHTML = `
-<h4>${idx}. ${t}</h4>
-<div class="scale" role="radiogroup" aria-label="ความพึงพอใจ ข้อที่ ${idx}">
-${["น้อยมาก","น้อย","ปานกลาง","มาก","มากที่สุด"].map((lab,j)=>`
-<label>
-<input type="radio" name="s${idx}" value="${j+1}" />
-<span>${j+1}. ${lab}</span>
-</label>
-`).join('')}
-</div>
-`;
-satDiv.appendChild(q);
-q.addEventListener('change', e=>{
-if(e.target.name===`s${idx}`){ state.sat[idx]=+e.target.value; }
-});
-});
-
-// ---------- Step 7: stars + feedback ----------
-document.querySelectorAll('.stars button').forEach(btn=>{
-btn.addEventListener('click', ()=>{
-state.stars = +btn.dataset.star;
-document.querySelectorAll('.stars button').forEach((b,i)=>{
-b.textContent = (i < state.stars) ? '★' : '☆';
-});
-});
-});
-document.getElementById('feedback').addEventListener('input', e=> state.feedback = e.target.value );
-
-// ---------- Step 8: summary & restart ----------
-const summaryOut = document.getElementById('summaryOut');
-const endObserver = new MutationObserver(()=>{
-const endStage = document.querySelector('[data-step="8"]');
-if (!endStage.classList.contains('hide')) {
-const answered = Object.keys(state.answers).length;
-const satAvg = Object.values(state.sat).length ?
-(Object.values(state.sat).reduce((a,b)=>a+b,0)/Object.values(state.sat).length).toFixed(1) : "-";
-summaryOut.innerHTML = `
-<div><strong>สรุปผลของคุณ</strong></div>
-<div>คะแนน SPST-20: <strong>${state.score}</strong> | <span>${state.interp}</span></div>
-<div>ตอบข้อคำถามจริง: ${answered} / 20 ข้อ</div>
-<div>ให้ดาว: ${"★".repeat(state.stars)}${"☆".repeat(5-state.stars)}</div>
-<div>ความพึงพอใจเฉลี่ย: ${satAvg} / 5</div>
-${state.feedback ? `<div style="margin-top:8px"><em>ข้อเสนอแนะ:</em> ${state.feedback}</div>` : ""}
-`;
-}
-});
-endObserver.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
-
-document.getElementById('restart').addEventListener('click', ()=>location.reload());
-</script>
-</body>
-</html>
+if(e.target.name === `q${
