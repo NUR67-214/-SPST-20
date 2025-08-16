@@ -225,22 +225,20 @@ footer{margin-top:24px;font-size:12px}
 
 <script>
 // ---------- App state ----------
-const state = {
-step: 1,
-answers: {},
-score: 0,
-interp: "",
-choice: null,
-sat: {},
-stars: 0,
-feedback: ""
-};
+const state = { step: 1, answers: {}, score: 0, interp: "", choice: null, sat: {}, stars: 0, feedback: "" };
 const stepsTotal = 8;
 const bar = document.getElementById('bar');
+function setStep(n){ state.step = n; document.querySelectorAll('.stage').forEach(el=>{el.classList.toggle('hide', +el.dataset.step !== n);}); bar.style.width = ((n-1)/(stepsTotal-1))*100 + '%'; window.scrollTo({top:0, behavior:'smooth'}); }
+document.getElementById('startBtn').addEventListener('click',()=>setStep(2));
+document.querySelectorAll('[data-nav]').forEach(btn=>{btn.addEventListener('click', e=>{const dir=e.currentTarget.dataset.nav;if(dir==='back') setStep(Math.max(1,state.step-1));if(dir==='next') setStep(Math.min(stepsTotal,state.step+1));});});
 
-function setStep(n){
-state.step = n;
-document.querySelectorAll('.stage').forEach(el=>{
-  el.classList.toggle('hide', +el.dataset.step !== n);
-});
-bar.style.width = ((n
+// ---------- Step 3: build SPST-20 ----------
+const items = [
+"กลัวทำงานผิดพลาด","ไปไม่ถึงเป้าหมายที่วางไว้","ครอบครัวขัดแย้งกันเรื่องเงิน/งานบ้าน",
+"กังวลเรื่องสารพิษหรือมลภาวะ","รู้สึกว่าต้องแข่งขันหรือเปรียบเทียบ","เงินไม่พอใช้จ่าย",
+"กล้ามเนื้อตึงหรือปวด","ปวดหัวจากความตึงเครียด","ปวดหลัง","ความอยากอาหารเปลี่ยนแปลง",
+"ปวดศีรษะข้างเดียว","รู้สึกวิตกกังวล","รู้สึกคับข้องใจ","โกรธหรือหงุดหงิด","รู้สึกเศร้า",
+"ความจำไม่ดี","รู้สึกสับสน","ตั้งสมาธิลำบาก","เหนื่อยง่าย","เป็นหวัดบ่อย ๆ"
+];
+const questionsDiv = document.getElementById('questions');
+items.forEach((t,i)=>{const idx=i+1; const q=document.createElement('div'); q.className='q'; q.innerHTML=`<h4>${idx}. ${t}</h4><div class="scale" role="radiogroup" aria-label="ระดับความเครียด ข้อที่ ${idx}">${[1,2,3,4,5].map(v=>`<label><input type="radio" name="q${idx}" value="${v}" /><span>${v}</span></label>`).join('')}</div>`; questionsDiv.appendChild(q); q.addEventListener('change', e=>{if(e.target.name===`q${idx}`){state.answers[idx]=+e.target.value;
