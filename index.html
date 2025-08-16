@@ -7,7 +7,7 @@
 <meta name="description" content="ประเมินความเครียดของคุณตอนนี้ด้วย SPST-20 พร้อมคำแนะนำคลายเครียด และแบบประเมินความพึงพอใจ" />
 <style>
 :root{
---bg:#e3f0fc; /* ฟ้าอ่อน */
+--bg:#e3f0fc;
 --card:#ffffff;
 --ink:#111827;
 --muted:#6b7280;
@@ -75,7 +75,6 @@ footer{margin-top:24px;font-size:12px}
 <div class="card">
 <div class="progress"><div id="bar" class="bar"></div></div>
 
-<!-- Stage 1: Intro -->
 <section class="stage" data-step="1">
 <p class="pill">หน้าแรก</p>
 <h2>ประเมินความเครียดของคุณตอนนี้เลย</h2>
@@ -85,7 +84,6 @@ footer{margin-top:24px;font-size:12px}
 </div>
 </section>
 
-<!-- Stage 2: Instruction -->
 <section class="stage hide" data-step="2">
 <p class="pill">คำชี้แจง</p>
 <h3>แบบวัดความเครียด กรมสุขภาพจิต (SPST-20)</h3>
@@ -107,7 +105,6 @@ footer{margin-top:24px;font-size:12px}
 </div>
 </section>
 
-<!-- Stage 3: Questionnaire -->
 <section class="stage hide" data-step="3" aria-live="polite">
 <p class="pill">แบบประเมิน 20 ข้อ</p>
 <div class="note">
@@ -121,7 +118,6 @@ footer{margin-top:24px;font-size:12px}
 <div id="scoreBox" class="result hide" role="status" aria-live="polite"></div>
 </section>
 
-<!-- Stage 4: Manage stress options -->
 <section class="stage hide" data-step="4">
 <p class="pill">แนวทางคลายเครียด</p>
 <h3>เลือกวิธีที่อยากลองตอนนี้</h3>
@@ -164,7 +160,6 @@ footer{margin-top:24px;font-size:12px}
 </div>
 </section>
 
-<!-- Stage 5: Show chosen method -->
 <section class="stage hide" data-step="5">
 <p class="pill">เริ่มคลายเครียด</p>
 <div id="methodPane"></div>
@@ -174,7 +169,6 @@ footer{margin-top:24px;font-size:12px}
 </div>
 </section>
 
-<!-- Stage 6: Satisfaction survey (10 items) -->
 <section class="stage hide" data-step="6">
 <p class="pill">แบบประเมินความพึงพอใจ</p>
 <p>โปรดประเมินความพึงพอใจต่อประสบการณ์ใช้งาน (1 = น้อยมาก … 5 = มากที่สุด)</p>
@@ -185,7 +179,6 @@ footer{margin-top:24px;font-size:12px}
 </div>
 </section>
 
-<!-- Stage 7: Suggestions + star rating -->
 <section class="stage hide" data-step="7">
 <p class="pill">ข้อเสนอแนะ</p>
 <label for="feedback">มีอะไรอยากให้ปรับปรุง/เพิ่มเติมบ้าง?</label>
@@ -206,7 +199,6 @@ footer{margin-top:24px;font-size:12px}
 </div>
 </section>
 
-<!-- Stage 8: Thank you -->
 <section class="stage hide" data-step="8">
 <p class="pill">เสร็จสิ้น</p>
 <h2>ขอบคุณสำหรับการทำแบบประเมิน 💙</h2>
@@ -219,18 +211,45 @@ footer{margin-top:24px;font-size:12px}
 </div>
 
 <footer class="muted">
-อ้างอิง: เกณฑ์แปลผลและข้อคำถาม SPST-20 จากเอกสารของกรมสุขภาพจิต/โรงพยาบาลสวนปรุง; ช่องทางช่วยเหลือ 1323 และหน่วยงานที่เกี่ยวข้อง; หลักฐานเชิงวิจัยเรื่องการฝึกหายใจเพื่อลดความเครียด (มีผลต่อระบบประสาทพาราซิมพาเทต) และแนวทางพัฒนาแบบลิเคิร์ต 5 ระดับ (Likert). แหล่งที่มาแนบท้ายหน้านี้
+อ้างอิง: เกณฑ์แปลผลและข้อคำถาม SPST-20 จากเอกสารของกรมสุขภาพจิต/โรงพยาบาลสวนปรุง; ช่องทางช่วยเหลือ 1323 และหน่วยงานที่เกี่ยวข้อง; หลักฐานเชิงวิจัยเรื่องการฝึกหายใจเพื่อลดความเครียด (มีผลต่อระบบประสาทพาราซิมพาเทติก) และแนวทางพัฒนาแบบลิเคิร์ต 5 ระดับ (Likert). แหล่งที่มาแนบท้ายหน้านี้
 </footer>
 </div>
 
 <script>
 // ---------- App state ----------
-const state = { step: 1, answers: {}, score: 0, interp: "", choice: null, sat: {}, stars: 0, feedback: "" };
+const state = {
+step: 1,
+answers: {},
+score: 0,
+interp: "",
+choice: null,
+sat: {},
+stars: 0,
+feedback: ""
+};
+
 const stepsTotal = 8;
 const bar = document.getElementById('bar');
-function setStep(n){ state.step = n; document.querySelectorAll('.stage').forEach(el=>{el.classList.toggle('hide', +el.dataset.step !== n);}); bar.style.width = ((n-1)/(stepsTotal-1))*100 + '%'; window.scrollTo({top:0, behavior:'smooth'}); }
+
+function setStep(n){
+state.step = n;
+document.querySelectorAll('.stage').forEach(el=>{
+el.classList.toggle('hide', +el.dataset.step !== n);
+});
+bar.style.width = ((n-1)/(stepsTotal-1))*100 + '%';
+window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ---------- Step navigation ----------
 document.getElementById('startBtn').addEventListener('click',()=>setStep(2));
-document.querySelectorAll('[data-nav]').forEach(btn=>{btn.addEventListener('click', e=>{const dir=e.currentTarget.dataset.nav;if(dir==='back') setStep(Math.max(1,state.step-1));if(dir==='next') setStep(Math.min(stepsTotal,state.step+1));});});
+
+document.querySelectorAll('[data-nav]').forEach(btn=>{
+btn.addEventListener('click', e=>{
+const dir = e.currentTarget.dataset.nav;
+if(dir==='back') setStep(Math.max(1, state.step-1));
+if(dir==='next') setStep(Math.min(stepsTotal, state.step+1));
+});
+});
 
 // ---------- Step 3: build SPST-20 ----------
 const items = [
@@ -241,4 +260,31 @@ const items = [
 "ความจำไม่ดี","รู้สึกสับสน","ตั้งสมาธิลำบาก","เหนื่อยง่าย","เป็นหวัดบ่อย ๆ"
 ];
 const questionsDiv = document.getElementById('questions');
-items.forEach((t,i)=>{const idx=i+1; const q=document.createElement('div'); q.className='q'; q.innerHTML=`<h4>${idx}. ${t}</h4><div class="scale" role="radiogroup" aria-label="ระดับความเครียด ข้อที่ ${idx}">${[1,2,3,4,5].map(v=>`<label><input type="radio" name="q${idx}" value="${v}" /><span>${v}</span></label>`).join('')}</div>`; questionsDiv.appendChild(q); q.addEventListener('change', e=>{if(e.target.name===`q${idx}`){state.answers[idx]=+e.target.value;
+
+items.forEach((t,i)=>{
+const idx = i+1;
+const q = document.createElement('div');
+q.className = 'q';
+q.innerHTML = `
+<h4>${idx}. ${t}</h4>
+<div class="scale" role="radiogroup" aria-label="ระดับความเครียด ข้อที่ ${idx}">
+${[1,2,3,4,5].map(v=>`
+<label>
+<input type="radio" name="q${idx}" value="${v}" />
+<span>${v}</span>
+</label>
+`).join('')}
+</div>
+`;
+questionsDiv.appendChild(q);
+q.addEventListener('change', e=>{
+if(e.target.name === `q${idx}`){
+state.answers[idx] = +e.target.value;
+}
+});
+});
+
+// ---------- Step 3: calculate & interpret ----------
+const scoreBox = document.getElementById('scoreBox');
+document.getElementById('calcBtn').addEventListener('click', ()=>{
+if (Object.keys(state.answers).length < 
