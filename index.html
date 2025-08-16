@@ -514,12 +514,13 @@ const methodPane = document.getElementById('methodPane');
 
 function renderMethod() {
   const c = state.choice;
+  // เคลียร์เนื้อหาเดิมก่อน
+  methodPane.innerHTML = '';
+
   if (!c) {
     methodPane.innerHTML = "<p class='muted'>ยังไม่ได้เลือกวิธี</p>";
     return;
   }
-  // เคลียร์เนื้อหาเดิมก่อน
-  methodPane.innerHTML = '';
 
   if (c !== 'crisis') {
     methodPane.innerHTML += `<div class="result" style="color:var(--ok);background:#f0fff0;border:1px solid #bef5c2;margin-bottom:12px;">
@@ -669,7 +670,7 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
 
-// ---------- Step 6: Satisfaction ----------
+// ---------- Step 6: satisfaction ----------
 const satItems = [
   "เข้าใจขั้นตอนการทำแบบประเมินได้ง่าย",
   "การอธิบายเกณฑ์คะแนนชัดเจน",
