@@ -31,6 +31,11 @@ body {
   background: var(--bg);
   color: var(--ink);
 }
+#scoreBox, .result {
+    font-variant-numeric: normal; /* ป้องกันเลขไทย */
+    font-feature-settings: "lnum"; /* ใช้เลขอารบิก */
+    color: #111827; /* สีตัวอักษรดำ */
+  }
 .wrap {
   max-width: 980px;
   margin: 0 auto;
@@ -764,5 +769,6 @@ document.getElementById('restart').addEventListener('click', () => location.relo
 </script>
 </body>
 </html>
+
 
 
