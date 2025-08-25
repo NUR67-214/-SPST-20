@@ -673,7 +673,11 @@ function renderMethod() {
       </div>`;
     setupBreathing();
   }
-
+  
+  matchGrid.innerHTML = '';
+  matchedCards = 0;
+  flippedCards = [];
+  
   if (c === 'game') {
     methodPane.innerHTML += `
       <h3>เกมจิ๋วโฟกัสสายตา</h3>
@@ -862,6 +866,7 @@ document.getElementById('restart').addEventListener('click', () => location.relo
 </script>
 </body>
 </html>
+
 
 
 
