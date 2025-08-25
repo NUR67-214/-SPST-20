@@ -474,12 +474,8 @@ function checkMatch() {
     card2.classList.add('matched');
     matchedCards += 2;
     if (matchedCards === cards.length) {
-      setTimeout(() => {
-        alert('คุณชนะ! 🎉');
-        initMatchGrid(); // <-- รีเซ็ตไพ่หลังชนะ
-      }, 300);
+      setTimeout(() => alert('คุณชนะ! 🎉'), 300);
     }
-
   } else {
     card1.classList.remove('flipped');
     card2.classList.remove('flipped');
@@ -487,22 +483,6 @@ function checkMatch() {
     card2.textContent = '';
   }
   flippedCards = [];
-}
-function initMatchGrid() {
-  matchGrid.innerHTML = ''; // เคลียร์ไพ่เก่า
-  flippedCards = [];
-  matchedCards = 0;
-
-  // สลับไพ่ใหม่
-  let shuffled = [...cards].sort(() => 0.5 - Math.random());
-
-  shuffled.forEach(icon => {
-    const card = document.createElement('div');
-    card.classList.add('card');
-    card.dataset.icon = icon;
-    card.addEventListener('click', flipCard);
-    matchGrid.appendChild(card);
-  });
 }
 
 // ---------- App state ----------
@@ -811,10 +791,8 @@ function setupGame() {
 const observer = new MutationObserver(() => {
   if (!document.querySelector('[data-step="5"]').classList.contains('hide')) {
     renderMethod();
-    initMatchGrid(); // <-- เพิ่มตรงนี้
   }
 });
-
 observer.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
 
 // ---------- Step 6: satisfaction ----------
@@ -893,8 +871,6 @@ document.getElementById('restart').addEventListener('click', () => location.relo
 </script>
 </body>
 </html>
-
-
 
 
 
