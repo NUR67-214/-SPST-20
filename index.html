@@ -529,17 +529,24 @@ function renderMethod() {
   }
 
   if (c === 'music') {
-    methodPane.innerHTML += `
-      <h3>ฟังเพลงผ่อนคลาย (ตัวอย่าง)</h3>
-      <p class="muted">ใส่ลิงก์เพลย์ลิสต์ที่คุณชอบ (เช่น YouTube/Spotify) ในไฟล์นี้ภายหลังได้</p>
-      <audio controls style="width:100%">
-        <source src="" type="audio/mp3" />
-        เบราว์เซอร์ของคุณไม่รองรับตัวเล่นเสียง
-      </audio>
-      <div class="result" style="margin-top:12px">
-        เคล็ดลับ: เลือกเพลงจังหวะช้า-กลาง, ไม่มีเนื้อร้องเยอะ เพื่อช่วยให้หัวใจและลมหายใจช้าลง
-      </div>`;
-  }
+  methodPane.innerHTML += `
+    <h3>ฟังเพลงผ่อนคลาย</h3>
+    <p class="muted">เพลงผ่อนคลายจาก YouTube</p>
+    <div style="position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb">
+      <iframe 
+        src="https://www.youtube.com/embed/dhFt7eURm78?autoplay=0&rel=0" 
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="position:absolute;inset:0;width:100%;height:100%">
+      </iframe>
+    </div>
+    <div class="result" style="margin-top:12px">
+      เคล็ดลับ: เลือกเพลงจังหวะช้า-กลาง ไม่มีเนื้อร้องเยอะ เพื่อช่วยให้หัวใจและลมหายใจช้าลง
+    </div>
+  `;
+}
 
   if (c === 'breath') {
     methodPane.innerHTML += `
@@ -744,3 +751,4 @@ document.getElementById('restart').addEventListener('click', () => location.relo
 </script>
 </body>
 </html>
+
