@@ -32,14 +32,16 @@ body {
   color: var(--ink);
 }
 #matchGrid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์ */
+  gap: 8px; /* ช่องว่างระหว่างไพ่ */
   max-width: 360px;
-  margin: 10px 0;
+  margin: 10px auto;
 }
+
 #matchGrid .card {
-  width: 80px;
-  height: 80px;
+  width: 100%;       /* เต็มคอลัมน์ */
+  aspect-ratio: 1/1; /* ให้เป็นสี่เหลี่ยมจัตุรัส */
   background-color: #3498db;
   display: flex;
   justify-content: center;
@@ -48,9 +50,9 @@ body {
   color: #fff;
   cursor: pointer;
   border-radius: 10px;
-  margin: 4px;
   user-select: none;
 }
+
 #matchGrid .card.flipped {
   background-color: #2ecc71;
 }
@@ -860,6 +862,7 @@ document.getElementById('restart').addEventListener('click', () => location.relo
 </script>
 </body>
 </html>
+
 
 
 
