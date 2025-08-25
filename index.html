@@ -513,10 +513,19 @@ document.getElementById('startBtn').addEventListener('click', ()=>setStep(2));
 document.querySelectorAll('[data-nav]').forEach(btn => {
   btn.addEventListener('click', e => {
     const dir = e.currentTarget.dataset.nav;
+
+    // เคลียร์เกมจับคู่แค่ตอนย้อนกลับจาก Stage 5
+    if (dir === 'back' && state.step === 5) {
+      matchGrid.innerHTML = '';
+      matchedCards = 0;
+      flippedCards = [];
+    }
+
     if (dir === 'back') setStep(Math.max(1, state.step - 1));
     if (dir === 'next') setStep(Math.min(stepsTotal, state.step + 1));
   });
 });
+
 
 // ---------- Step 3: build SPST-20 ----------
 const items = [
@@ -673,10 +682,6 @@ function renderMethod() {
       </div>`;
     setupBreathing();
   }
-  
-  matchGrid.innerHTML = '';
-  matchedCards = 0;
-  flippedCards = [];
   
   if (c === 'game') {
     methodPane.innerHTML += `
@@ -866,6 +871,7 @@ document.getElementById('restart').addEventListener('click', () => location.relo
 </script>
 </body>
 </html>
+
 
 
 
