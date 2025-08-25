@@ -31,6 +31,33 @@ body {
   background: var(--bg);
   color: var(--ink);
 }
+#matchGrid {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 360px;
+  margin: 10px 0;
+}
+#matchGrid .card {
+  width: 80px;
+  height: 80px;
+  background-color: #3498db;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 4px;
+  user-select: none;
+}
+#matchGrid .card.flipped {
+  background-color: #2ecc71;
+}
+#matchGrid .card.matched {
+  background-color: #e74c3c;
+  cursor: default;
+}
 #scoreBox, .result {
     font-variant-numeric: normal; /* ป้องกันเลขไทย */
     font-feature-settings: "lnum"; /* ใช้เลขอารบิก */
@@ -347,13 +374,21 @@ footer {
 </section>
 <!-- Stage 5: Show chosen method -->
 <section class="stage hide" data-step="5">
-<p class="pill">เริ่มคลายเครียด</p>
-<div id="methodPane"></div>
-<div class="btns">
-<button class="subtle" data-nav="back">ย้อนกลับ</button>
-<button class="primary" data-nav="next">ถัดไป</button>
-</div>
+  <p class="pill">เริ่มคลายเครียด</p>
+  
+  <!-- โซนแสดงกิจกรรม -->
+  <div id="methodPane"></div>
+  
+  <!-- โซนเกมจับคู่ภาพ -->
+  <h3>เกมจับคู่ภาพ (Memory Game)</h3>
+  <div class="grid" id="matchGrid"></div>
+
+  <div class="btns">
+    <button class="subtle" data-nav="back">ย้อนกลับ</button>
+    <button class="primary" data-nav="next">ถัดไป</button>
+  </div>
 </section>
+
 <!-- Stage 6: Satisfaction survey (10 items) -->
 <section class="stage hide" data-step="6">
 <p class="pill">แบบประเมินความพึงพอใจ</p>
@@ -400,6 +435,54 @@ footer {
 </footer>
 </div>
 <script>
+  // ---------- เกมจับคู่ภาพ ----------
+const icons = ['🍎','🍌','🍇','🍒','🥝','🍍','🍉','🍑'];
+let cards = [...icons, ...icons]; // ทำไพ่คู่
+cards.sort(() => 0.5 - Math.random()); // สลับไพ่
+
+const matchGrid = document.getElementById('matchGrid');
+let flippedCards = [];
+let matchedCards = 0;
+
+// สร้างไพ่ลงกริด
+cards.forEach(icon => {
+  const card = document.createElement('div');
+  card.classList.add('card');
+  card.dataset.icon = icon;
+  card.addEventListener('click', flipCard);
+  matchGrid.appendChild(card);
+});
+
+function flipCard() {
+  if (flippedCards.length < 2 && !this.classList.contains('flipped') && !this.classList.contains('matched')) {
+    this.classList.add('flipped');
+    this.textContent = this.dataset.icon;
+    flippedCards.push(this);
+
+    if (flippedCards.length === 2) {
+      setTimeout(checkMatch, 500);
+    }
+  }
+}
+
+function checkMatch() {
+  const [card1, card2] = flippedCards;
+  if (card1.dataset.icon === card2.dataset.icon) {
+    card1.classList.add('matched');
+    card2.classList.add('matched');
+    matchedCards += 2;
+    if (matchedCards === cards.length) {
+      setTimeout(() => alert('คุณชนะ! 🎉'), 300);
+    }
+  } else {
+    card1.classList.remove('flipped');
+    card2.classList.remove('flipped');
+    card1.textContent = '';
+    card2.textContent = '';
+  }
+  flippedCards = [];
+}
+
 // ---------- App state ----------
 const state = {
   step: 1,
@@ -715,6 +798,8 @@ const satItems = [
   "จะแนะนำเครื่องมือนี้ให้ผู้อื่น"
 ];
 
+
+
 const satDiv = document.getElementById('satQs');
 
 satItems.forEach((t, i) => {
@@ -775,6 +860,7 @@ document.getElementById('restart').addEventListener('click', () => location.relo
 </script>
 </body>
 </html>
+
 
 
 
